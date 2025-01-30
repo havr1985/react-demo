@@ -6,6 +6,8 @@ import { lazy, Suspense } from 'react';
 const Home = lazy(() => import('../pages/HomePage.tsx'));
 const Login = lazy(() => import('../pages/LoginPage.tsx'));
 const Users = lazy(() => import('../pages/UsersPage.tsx'));
+const Recipes = lazy(() => import('../pages/RecipesPage.tsx'));
+const User = lazy(() => import('../pages/UserDetailsPage.tsx'));
 export const Routes = () =>
   useRoutes([
     {
@@ -21,7 +23,7 @@ export const Routes = () =>
           ),
         },
         {
-          path: 'login',
+          path: AppRoutes.login,
           element: (
             <Suspense>
               <Login />
@@ -29,10 +31,26 @@ export const Routes = () =>
           ),
         },
         {
-          path: 'users',
+          path: AppRoutes.users,
           element: (
             <Suspense>
               <Users />
+            </Suspense>
+          ),
+        },
+        {
+          path: AppRoutes.recipes,
+          element: (
+            <Suspense>
+              <Recipes />
+            </Suspense>
+          ),
+        },
+        {
+          path: AppRoutes.user,
+          element: (
+            <Suspense>
+              <User />
             </Suspense>
           ),
         },

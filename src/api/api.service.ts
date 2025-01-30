@@ -1,6 +1,7 @@
 import { axiosInstance } from './axiosInstance.ts';
 import { IAuthResponse } from '../models/auth/authResponse.model.ts';
 import { IUserResponse } from '../models/user/user.model.ts';
+import { IRecipesResponse } from '../models/recipe/recipe.model.ts';
 
 interface LoginData {
   username: string;
@@ -21,5 +22,10 @@ export const refreshAccessToken = async (
 
 export const getAllUsers = async (): Promise<IUserResponse> => {
   const res = await axiosInstance.get(`users?limit=0`);
+  return res.data;
+};
+
+export const getAllRecipes = async (): Promise<IRecipesResponse> => {
+  const res = await axiosInstance.get('recipes?limit=0');
   return res.data;
 };

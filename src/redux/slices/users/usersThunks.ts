@@ -8,7 +8,7 @@ export const getAllUsersThunk = createAsyncThunk(
       return await getAllUsers();
     } catch (error) {
       console.log(error);
-      return rejectWithValue('Failed to load user');
+      return rejectWithValue('Failed to load users');
     }
   }
 );

@@ -1,22 +1,40 @@
-import { useAppSelector } from '../../../redux/hooks.ts';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks.ts';
 
 import { UserItem } from '../user-item/UserItem.tsx';
+import { Pagination } from '../../pagination/Pagination.tsx';
+import { setCurrentPage } from '../../../redux/slices/users/usersSlice.ts';
+import { NavLink } from 'react-router-dom';
 
 export const UsersList = () => {
-  const { users } = useAppSelector((state) => state.users);
-
-  console.log(users);
+  const { users, currentPage, totalPages, usersPerPage } = useAppSelector(
+    (state) => state.users
+  );
+  const dispatch = useAppDispatch();
 
   return (
     <div>
       {users.length && (
-        <ul>
-          {users.map((user) => (
-            <li key={user.id}>
-              <UserItem user={user} />
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul>
+            {users
+              .slice(
+                (currentPage - 1) * usersPerPage,
+                currentPage * usersPerPage
+              )
+              .map((user) => (
+                <NavLink to={`/user/${user.id}`} key={user.id}>
+                  <li>
+                    <UserItem user={user} />
+                  </li>
+                </NavLink>
+              ))}
+          </ul>
+          <Pagination
+            currentPage={currentPage}
+            totalPage={totalPages}
+            onPageChange={(page) => dispatch(setCurrentPage(page))}
+          />
+        </>
       )}
     </div>
   );
