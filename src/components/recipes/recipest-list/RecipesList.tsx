@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from '../../../redux/hooks.ts';
 import { Pagination } from '../../pagination/Pagination.tsx';
 import { RecipeItem } from '../recipe-item/RecipeItem.tsx';
 import { setCurrentPage } from '../../../redux/slices/recipes/recipesSlice.ts';
+import { NavLink } from 'react-router-dom';
 
 export const RecipesList = () => {
   const { recipes, currentPage, totalPages, recipesPerPage } = useAppSelector(
@@ -19,9 +20,11 @@ export const RecipesList = () => {
                 currentPage * recipesPerPage
               )
               .map((recipe) => (
-                <li key={recipe.id}>
-                  <RecipeItem recipe={recipe} />
-                </li>
+                <NavLink to={`/recipe/${recipe.id}`} key={recipe.id}>
+                  <li>
+                    <RecipeItem recipe={recipe} />
+                  </li>
+                </NavLink>
               ))}
           </ul>
           <Pagination

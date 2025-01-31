@@ -1,52 +1,64 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { login } from './authThunks.ts';
-import {
-  IAuthResponse,
-  IAuthUser,
-} from '../../../models/auth/authResponse.model.ts';
+import { createSlice } from '@reduxjs/toolkit';
+import { getMeThunk, login, refreshTokenThunk } from './authThunks.ts';
+import { IAuthUser } from '../../../models/auth/authResponse.model.ts';
+import { authStorage } from '../../../utils/authStorage.ts';
 
 interface AuthState {
   user: IAuthUser | null;
   accessToken: string | null;
   loading: boolean;
   error: string | null;
+  isAuth: boolean;
+  isInit: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
-  accessToken: localStorage.getItem('accessToken') || null,
+  accessToken: authStorage.getAccessToken() || null,
   loading: false,
   error: null,
+  isAuth: !!authStorage.getAccessToken(),
+  isInit: false,
 };
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setToken: (
-      state,
-      action: PayloadAction<{ accessToken: string; refreshToken: string }>
-    ) => {
-      state.accessToken = action.payload.accessToken;
-      localStorage.setItem('accessToken', action.payload.accessToken);
-      localStorage.setItem('refreshToken', action.payload.refreshToken);
-    },
     logout: (state) => {
       state.user = null;
-      state.accessToken = null;
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refresh_token');
+      state.isAuth = false;
+      authStorage.clearTokens();
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(
-      login.fulfilled,
-      (state, action: PayloadAction<IAuthResponse>) => {
+    builder
+      .addCase(getMeThunk.fulfilled, (state, action) => {
         state.user = action.payload.user;
-      }
-    );
+        state.isAuth = true;
+        state.isInit = true;
+      })
+      .addCase(getMeThunk.rejected, (state) => {
+        state.user = null;
+        state.isAuth = false;
+        state.isInit = true;
+      })
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+        state.accessToken = action.payload.accessToken;
+        state.isAuth = true;
+        state.isInit = true;
+      })
+
+      .addCase(refreshTokenThunk.fulfilled, (state, action) => {
+        state.accessToken = action.payload.accessToken;
+        state.isAuth = true;
+      });
   },
 });
 
-export const { setToken, logout } = authSlice.actions;
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

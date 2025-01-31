@@ -10,8 +10,7 @@ export const LoginForm = () => {
   };
 
   const dispatch = useAppDispatch();
-  const { user, loading } = useAppSelector((state) => state.auth);
-
+  const { isAuth } = useAppSelector((state) => state.auth);
   const {
     handleSubmit,
     register,
@@ -19,7 +18,7 @@ export const LoginForm = () => {
     formState: { errors, isValid },
   } = useForm<loginData>({ mode: 'onBlur' });
 
-  if (user) {
+  if (isAuth) {
     return <Navigate to="/" />;
   }
   const loginHandler = async (formValue: loginData) => {
@@ -33,27 +32,37 @@ export const LoginForm = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit(loginHandler)}>
-        <label>
+    <div className="flex justify-center mt-20">
+      <form
+        onSubmit={handleSubmit(loginHandler)}
+        className="border-4 border-yellow-300 flex flex-col py-8 px-16 gap-5 rounded-lg"
+      >
+        <label className="flex flex-col gap-3 text-2xl text-gray-300">
           Username
           <input
+            className="h-10 rounded-lg px-4 text-black"
             type="text"
             {...register('username', { required: 'Username is required' })}
-            value="emilys"
+            placeholder="emilys"
           />
-          <p>{errors.username?.message}</p>
+          <p className="text-red-500 text-xs">{errors.username?.message}</p>
         </label>
-        <label>
+        <label className="flex flex-col gap-3 text-2xl text-gray-300">
           Password
           <input
+            className="h-10 rounded-lg px-4 text-black"
             type="text"
             {...register('password', { required: 'Password is required' })}
-            value="emilyspass"
+            placeholder="emilyspass"
           />
-          <p>{errors.password?.message}</p>
+          <p className="text-red-500 text-xs">{errors.password?.message}</p>
         </label>
-        <button disabled={!isValid || loading}>Login</button>
+        <button
+          disabled={!isValid}
+          className="bg-yellow-300 px-4 py-2 rounded-2xl text-black hover:bg-yellow-600"
+        >
+          Login
+        </button>
       </form>
     </div>
   );

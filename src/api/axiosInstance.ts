@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { store } from '../redux/store.ts';
-import { refreshTokenThunk } from '../redux/slices/auth/authThunks.ts';
-import { logout } from '../redux/slices/auth/authSlice.ts';
+import { authStorage } from '../utils/authStorage.ts';
+import { refreshAccessToken } from './api.service.ts';
 
 export const axiosInstance = axios.create({
   baseURL: 'https://dummyjson.com',
@@ -12,8 +11,7 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const state = store.getState();
-    const token = state.auth.accessToken;
+    const token = authStorage.getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -29,12 +27,18 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401 && !originalReq._retry) {
       originalReq._retry = true;
       try {
-        await store.dispatch(refreshTokenThunk());
-        const newState = store.getState();
-        originalReq.headers.Authorization = `Bearer ${newState.auth.accessToken}`;
-        return axiosInstance(originalReq);
+        const oldRefreshToken = authStorage.getRefreshToken();
+        if (!oldRefreshToken) {
+          throw new Error('No refresh token');
+        }
+
+        const { accessToken, refreshToken } =
+          await refreshAccessToken(oldRefreshToken);
+        authStorage.setTokens(accessToken, refreshToken);
+
+        axiosInstance.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+        originalReq.headers.Authorization = `Bearer ${accessToken}`;
       } catch (err) {
-        store.dispatch(logout());
         return Promise.reject(err);
       }
     }

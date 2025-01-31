@@ -1,7 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { loginUser, refreshAccessToken } from '../../../api/api.service.ts';
-import { setToken } from './authSlice.ts';
-import { store } from '../../store.ts';
+import {
+  getMe,
+  loginUser,
+  refreshAccessToken,
+} from '../../../api/api.service.ts';
+import { authStorage } from '../../../utils/authStorage.ts';
 
 type loginData = {
   username: string;
@@ -12,13 +15,16 @@ export const login = createAsyncThunk(
   async (formValue: loginData, { rejectWithValue }) => {
     try {
       const data = await loginUser(formValue);
-      store.dispatch(
-        setToken({
-          accessToken: data.accessToken,
-          refreshToken: data.refreshToken,
-        })
-      );
-      return data;
+      authStorage.setTokens(data.accessToken, data.refreshToken);
+      return {
+        user: {
+          id: data.id,
+          username: data.username,
+          image: data.image,
+        },
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
+      };
     } catch (error) {
       console.log(error);
       return rejectWithValue('Invalid credential');
@@ -26,21 +32,35 @@ export const login = createAsyncThunk(
   }
 );
 
+export const getMeThunk = createAsyncThunk(
+  'auth/getMe',
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await getMe();
+      return {
+        user: {
+          id: data.id,
+          username: data.username,
+          image: data.image,
+        },
+      };
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue('Failed to get user data');
+    }
+  }
+);
+
 export const refreshTokenThunk = createAsyncThunk(
   'auth/refresh',
   async (_, { rejectWithValue }) => {
-    const refreshToken = localStorage.getItem('refreshToken');
+    const refreshToken = authStorage.getRefreshToken();
     if (!refreshToken) {
       return rejectWithValue('No refresh token available');
     }
     try {
       const data = await refreshAccessToken(refreshToken);
-      store.dispatch(
-        setToken({
-          accessToken: data.accessToken,
-          refreshToken: data.refreshToken,
-        })
-      );
+      authStorage.setTokens(data.accessToken, data.refreshToken);
       return data;
     } catch (error) {
       console.log(error);

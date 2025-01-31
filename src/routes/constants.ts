@@ -4,4 +4,5 @@ export const AppRoutes = {
   users: '/users',
   recipes: '/recipes',
   user: '/user/:id',
+  recipe: '/recipe/:id',
 };

@@ -1,5 +1,7 @@
 export interface IAuthResponse {
-  user: IAuthUser;
+  id: number;
+  username: string;
+  image: string;
   accessToken: string;
   refreshToken: string;
 }

@@ -2,12 +2,15 @@ import { useRoutes } from 'react-router-dom';
 import { AppRoutes } from './constants.ts';
 import { Layout } from '../layouts/Layout.tsx';
 import { lazy, Suspense } from 'react';
+import { PrivateRote } from './PrivateRote.tsx';
 
 const Home = lazy(() => import('../pages/HomePage.tsx'));
 const Login = lazy(() => import('../pages/LoginPage.tsx'));
 const Users = lazy(() => import('../pages/UsersPage.tsx'));
 const Recipes = lazy(() => import('../pages/RecipesPage.tsx'));
 const User = lazy(() => import('../pages/UserDetailsPage.tsx'));
+const Recipe = lazy(() => import('../pages/RecipeDetailsPage.tsx'));
+console.log('Routes loaded');
 export const Routes = () =>
   useRoutes([
     {
@@ -17,7 +20,7 @@ export const Routes = () =>
         {
           index: true,
           element: (
-            <Suspense>
+            <Suspense fallback={<p>Loading</p>}>
               <Home />
             </Suspense>
           ),
@@ -25,7 +28,7 @@ export const Routes = () =>
         {
           path: AppRoutes.login,
           element: (
-            <Suspense>
+            <Suspense fallback={<p>Loading</p>}>
               <Login />
             </Suspense>
           ),
@@ -33,25 +36,41 @@ export const Routes = () =>
         {
           path: AppRoutes.users,
           element: (
-            <Suspense>
-              <Users />
-            </Suspense>
+            <PrivateRote>
+              <Suspense fallback={<p>Loading</p>}>
+                <Users />
+              </Suspense>
+            </PrivateRote>
           ),
         },
         {
           path: AppRoutes.recipes,
           element: (
-            <Suspense>
-              <Recipes />
-            </Suspense>
+            <PrivateRote>
+              <Suspense fallback={<p>Loading</p>}>
+                <Recipes />
+              </Suspense>
+            </PrivateRote>
           ),
         },
         {
           path: AppRoutes.user,
           element: (
-            <Suspense>
-              <User />
-            </Suspense>
+            <PrivateRote>
+              <Suspense fallback={<p>Loading</p>}>
+                <User />
+              </Suspense>
+            </PrivateRote>
+          ),
+        },
+        {
+          path: AppRoutes.recipe,
+          element: (
+            <PrivateRote>
+              <Suspense fallback={<p>Loading</p>}>
+                <Recipe />
+              </Suspense>
+            </PrivateRote>
           ),
         },
       ],

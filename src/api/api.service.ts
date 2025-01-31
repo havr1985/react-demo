@@ -13,6 +13,11 @@ export const loginUser = async (data: LoginData): Promise<IAuthResponse> => {
   return res.data;
 };
 
+export const getMe = async (): Promise<IAuthResponse> => {
+  const res = await axiosInstance.get('auth/me');
+  return res.data;
+};
+
 export const refreshAccessToken = async (
   refreshToken: string
 ): Promise<{ accessToken: string; refreshToken: string }> => {
