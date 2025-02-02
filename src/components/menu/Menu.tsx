@@ -5,7 +5,6 @@ import { logout } from '../../redux/slices/auth/authSlice.ts';
 export const Menu = () => {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.auth);
-  console.log(isAuth, user);
 
   const handleLogOut = () => {
     dispatch(logout());
@@ -54,9 +53,12 @@ export const Menu = () => {
           </button>
         </>
       ) : (
-        <button className="bg-yellow-300 px-4 py-2 rounded-2xl text-black hover:bg-yellow-600">
-          <Link to="/login">Login</Link>
-        </button>
+        <Link
+          to="/login"
+          className="bg-yellow-300 px-4 py-2 rounded-2xl text-black hover:bg-yellow-600"
+        >
+          Login
+        </Link>
       )}
     </header>
   );

@@ -23,7 +23,6 @@ export const LoginForm = () => {
   }
   const loginHandler = async (formValue: loginData) => {
     try {
-      console.log(formValue);
       await dispatch(login(formValue));
       reset();
     } catch (err) {

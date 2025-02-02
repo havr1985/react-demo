@@ -6,10 +6,12 @@ import { IRecipesResponse } from '../models/recipe/recipe.model.ts';
 interface LoginData {
   username: string;
   password: string;
+  expiresInMins?: number;
 }
 
 export const loginUser = async (data: LoginData): Promise<IAuthResponse> => {
-  const res = await axiosInstance.post('auth/login', data);
+  const payload = { ...data, expiresInMins: 2 };
+  const res = await axiosInstance.post('auth/login', payload);
   return res.data;
 };
 
@@ -21,7 +23,7 @@ export const getMe = async (): Promise<IAuthResponse> => {
 export const refreshAccessToken = async (
   refreshToken: string
 ): Promise<{ accessToken: string; refreshToken: string }> => {
-  const res = await axiosInstance.post('auth/refresh', refreshToken);
+  const res = await axiosInstance.post('auth/refresh', { refreshToken });
   return res.data;
 };
 

@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { getAllUsersThunk } from '../redux/slices/users/usersThunks.ts';
 
 const UsersPage = () => {
-  const { users } = useAppSelector((state) => state.users);
+  const { users, loading, error } = useAppSelector((state) => state.users);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -14,9 +14,15 @@ const UsersPage = () => {
     }
   }, [dispatch, users.length]);
   return (
-    <div>
-      <UsersList />
-    </div>
+    <>
+      {loading && <div>Loading...</div>}
+      {error && <div>Error</div>}
+      {!loading && !error && (
+        <section className="my-5">
+          <UsersList />
+        </section>
+      )}
+    </>
   );
 };
 

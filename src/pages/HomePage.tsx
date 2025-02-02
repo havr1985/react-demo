@@ -1,5 +1,11 @@
+import { Main } from '../components/main/Main.tsx';
+
 const HomePage = () => {
-  return <div>Home page</div>;
+  return (
+    <section className="my-14 flex justify-center">
+      <Main />
+    </section>
+  );
 };
 
 export default HomePage;

@@ -10,7 +10,7 @@ const Users = lazy(() => import('../pages/UsersPage.tsx'));
 const Recipes = lazy(() => import('../pages/RecipesPage.tsx'));
 const User = lazy(() => import('../pages/UserDetailsPage.tsx'));
 const Recipe = lazy(() => import('../pages/RecipeDetailsPage.tsx'));
-console.log('Routes loaded');
+
 export const Routes = () =>
   useRoutes([
     {

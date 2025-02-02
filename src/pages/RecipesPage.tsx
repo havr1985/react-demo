@@ -6,7 +6,6 @@ import { RecipesList } from '../components/recipes/recipest-list/RecipesList.tsx
 const RecipesPage = () => {
   const { recipes, loading, error } = useAppSelector((store) => store.recipes);
   const dispatch = useAppDispatch();
-  console.log(recipes);
   useEffect(() => {
     if (!recipes.length) {
       dispatch(getAllRecipesThunk());
@@ -18,9 +17,9 @@ const RecipesPage = () => {
       {loading && <div>Loading...</div>}
       {error && <div>Error</div>}
       {!loading && !error && (
-        <div>
+        <section className="mt-5">
           <RecipesList />
-        </div>
+        </section>
       )}
     </>
   );

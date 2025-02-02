@@ -1,9 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import {
-  getMe,
-  loginUser,
-  refreshAccessToken,
-} from '../../../api/api.service.ts';
+import { getMe, loginUser } from '../../../api/api.service.ts';
 import { authStorage } from '../../../utils/authStorage.ts';
 
 type loginData = {
@@ -47,24 +43,6 @@ export const getMeThunk = createAsyncThunk(
     } catch (error) {
       console.log(error);
       return rejectWithValue('Failed to get user data');
-    }
-  }
-);
-
-export const refreshTokenThunk = createAsyncThunk(
-  'auth/refresh',
-  async (_, { rejectWithValue }) => {
-    const refreshToken = authStorage.getRefreshToken();
-    if (!refreshToken) {
-      return rejectWithValue('No refresh token available');
-    }
-    try {
-      const data = await refreshAccessToken(refreshToken);
-      authStorage.setTokens(data.accessToken, data.refreshToken);
-      return data;
-    } catch (error) {
-      console.log(error);
-      return rejectWithValue('Error to refresh token');
     }
   }
 );

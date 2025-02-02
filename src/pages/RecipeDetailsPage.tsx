@@ -2,9 +2,9 @@ import { RecipeDetails } from '../components/recipes/recipe-details/RecipeDetail
 
 const RecipeDetailsPage = () => {
   return (
-    <div>
+    <section className="mt-20">
       <RecipeDetails />
-    </div>
+    </section>
   );
 };
 

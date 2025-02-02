@@ -2,9 +2,9 @@ import { UserDetails } from '../components/users/user-details/UserDetails.tsx';
 
 const UserDetailsPage = () => {
   return (
-    <div>
+    <section className="flex justify-center mt-20">
       <UserDetails />
-    </div>
+    </section>
   );
 };
 

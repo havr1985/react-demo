@@ -2,7 +2,7 @@ import { IUser } from '../../../models/user/user.model.ts';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getAllUsersThunk } from './usersThunks.ts';
 
-interface IUsersState {
+export interface IUsersState {
   users: IUser[];
   usersPerPage: number;
   currentPage: number;
@@ -27,6 +27,9 @@ const usersSlice = createSlice({
     setCurrentPage: (state, action: PayloadAction<number>) => {
       state.currentPage = action.payload;
     },
+    setTotalPages: (state, action: PayloadAction<number>) => {
+      state.totalPages = Math.ceil(action.payload / state.usersPerPage);
+    },
   },
   extraReducers: (builder) =>
     builder
@@ -47,5 +50,5 @@ const usersSlice = createSlice({
       }),
 });
 
-export const { setCurrentPage } = usersSlice.actions;
+export const { setCurrentPage, setTotalPages } = usersSlice.actions;
 export default usersSlice.reducer;

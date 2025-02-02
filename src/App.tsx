@@ -4,17 +4,15 @@ import { useAppDispatch, useAppSelector } from './redux/hooks.ts';
 import { useEffect } from 'react';
 import { getMeThunk } from './redux/slices/auth/authThunks.ts';
 
-console.log('APP Started');
-
 function App() {
   const dispatch = useAppDispatch();
   const { isAuth, user } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
-    if (!user && isAuth) {
+    if (!user || !isAuth) {
       dispatch(getMeThunk());
     }
-  }, [dispatch, user]);
+  }, [dispatch, isAuth, user]);
   return (
     <>
       <div>
